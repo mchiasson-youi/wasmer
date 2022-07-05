@@ -283,8 +283,8 @@ capi_compilers_engines_exclude :=
 # Define the compiler Cargo features for the C API. It always excludes
 # LLVM for the moment because it causes the linker to fail since LLVM is not statically linked.
 # TODO: Reenable LLVM in C-API
-capi_compiler_features := --features $(subst $(space),$(comma),$(filter-out llvm, $(compilers)))
-capi_compilers_engines_exclude += llvm-universal llvm-dylib
+capi_compiler_features := --features $(subst $(space),$(comma),$(compilers))
+#capi_compilers_engines_exclude += llvm-universal llvm-dylib
 
 # We exclude singlepass-universal because it doesn't support multivalue (required in wasm-c-api tests)
 capi_compilers_engines_exclude += singlepass-universal
