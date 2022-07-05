@@ -1,0 +1,52 @@
+name: Check public API
+
+env:
+  RUST_BACKTRACE: 1
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]   
+jobs:
+  setup:
+    name: Set up
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.setup.outputs.VERSION }}
+      SHOULD_CHECK_API: ${{ steps.setup.outputs.SHOULD_CHECK_API }}
+    steps:
+
+      - name: Set up env vars
+        id: setup
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          echo ::set-output name=VERSION::${VERSION}
+          SHOULD_CHECK_API=$(echo $VERSION | grep -c '^[0-9]\+\.[0-9]\+\.[0-9]\+\(-\([a-zA-Z]\+\)\?[0-9]*\)\?$' || true)
+          echo ::set-output name=SHOULD_CHECK_API::${SHOULD_CHECK_API}
+          echo $VERSION
+          echo $SHOULD_CHECK_API
+
+      - uses: actions/checkout@v2
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            profile: minimal
+            override: true
+
+      - name: Generate API change report
+        run: |
+          cargo install cargo-public-api
+          cargo install ripgrep
+          LATEST_VERSION=$(cargo search wasmer | rg --only-matching --replace '$1' 'wasmer = "(.*)"')
+          cargo public-api --manifest-path=lib/api/Cargo.toml --diff-git-checkouts $LATEST_VERSION master > diff.txt
+      
+      - name: Archive change report
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-diff-report
+          path: |
+            diff.txt
+
+
