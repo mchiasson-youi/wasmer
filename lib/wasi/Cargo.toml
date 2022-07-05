@@ -46,11 +46,15 @@ wasm-bindgen-test = "0.3.0"
 tracing-wasm = "0.2"
 
 [features]
-default = ["sys-default"]
+default = ["wasmer/sys", "wasmer/wat", "wasmer/default-engine", "sys", "logging", "host-fs", "sys-poll", "host-vnet"]
 
 sys = ["wasmer/sys"]
 sys-default = ["wasmer/sys-default", "sys", "logging", "host-fs", "sys-poll", "host-vnet" ]
 sys-poll = []
+
+compiler-singlepass = ["wasmer/default-singlepass"]
+compiler-cranelift = ["wasmer/default-cranelift"]
+compiler-llvm = ["wasmer/default-llvm"]
 
 js = ["wasmer/js", "mem-fs", "wasmer-vfs/no-time", "getrandom/js", "chrono"]
 js-default = ["js", "wasmer/js-default"]

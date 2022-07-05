@@ -13,7 +13,7 @@ edition = "2018"
 [dependencies]
 anyhow = "1.0"
 wasmer = { path = "../../../lib/api", version = "=2.3.0", default-features = false, features = ["experimental-reference-types-extern-ref"] }
-wasmer-wasi = { path = "../../../lib/wasi", version = "=2.3.0" }
+wasmer-wasi = { path = "../../../lib/wasi", version = "=2.3.0", features = ["compiler-cranelift"] }
 wasmer-vfs = { path = "../../../lib/vfs", version = "=2.3.0" }
 wast = "38.0"
 serde = "1"

@@ -486,10 +486,10 @@ test-packages:
 test-js: test-js-api test-js-wasi
 
 test-js-api:
-	cd lib/api && wasm-pack test --node -- --no-default-features --features js-default,wat
+	cd lib/api && wasm-pack test --node -- --no-default-features --features js-default,wat,default-compiler
 
 test-js-wasi:
-	cd lib/wasi && wasm-pack test --node -- --no-default-features --features test-js
+	cd lib/wasi && wasm-pack test --node -- --no-default-features --features test-js,default-compiler
 
 #####
 #
@@ -529,7 +529,7 @@ test-capi-integration-%:
 	cd lib/c-api/examples; WASMER_CAPI_CONFIG=$(shell echo $@ | sed -e s/test-capi-integration-//) WASMER_DIR=`pwd`/../../../package make run
 
 test-wasi-unit:
-	$(CARGO_BINARY) test $(CARGO_TARGET) --manifest-path lib/wasi/Cargo.toml --release
+	$(CARGO_BINARY) test $(CARGO_TARGET) --manifest-path lib/wasi/Cargo.toml --release --features compiler-cranelift
 
 test-wasi:
 	$(CARGO_BINARY) test $(CARGO_TARGET) --release --tests $(compiler_features) -- wasi::wasitests
