@@ -136,7 +136,9 @@ ifneq ($(ENABLE_LLVM), 0)
 		LLVM_VERSION := $(shell llvm-config --version)
 
 		# If findstring is not empty, then it have found the value
-		ifneq (, $(findstring 13,$(LLVM_VERSION)))
+		ifneq (, $(findstring 14,$(LLVM_VERSION)))
+			compilers += llvm
+		else ifneq (, $(findstring 13,$(LLVM_VERSION)))
 			compilers += llvm
 		else ifneq (, $(findstring 12,$(LLVM_VERSION)))
 			compilers += llvm
